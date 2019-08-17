@@ -37,7 +37,13 @@ function getById(id) {
 
 function getByProject(projectId) {
   return db('tasks')
-    .where('project_id', id);
+    .select(
+      'id',
+      'description',
+      'notes',
+      'completed'
+    )
+    .where('project_id', projectId);
 };
 
 function insert(task) {
