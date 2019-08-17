@@ -3,10 +3,11 @@ const db = require('../dbConfig');
 module.exports = {
   get,
   getById,
-  //getUserPosts,
   insert,
   update,
   remove,
+  associateResource,
+  getResources
 };
 
 function get() {
@@ -18,13 +19,6 @@ function getById(id) {
     .where({ id })
     .first();
 }
-
-// function getUserPosts(userId) {
-//   return db('posts as p')
-//     .join('users as u', 'u.id', 'p.user_id')
-//     .select('p.id', 'p.text', 'u.name as postedBy')
-//     .where('p.user_id', userId);
-// }
 
 function insert(project) {
   return db('projects')
@@ -45,3 +39,28 @@ function remove(id) {
     .where('id', id)
     .del();
 }
+
+function associateResource(project_id, resource_id) {
+  return db('projects_resources')
+    .insert({
+      project_id,
+      resource_id
+    })
+    .then(() => {
+      return {
+        project_id,
+        resource_id
+      };
+    });
+}
+
+function getResources(project_id) {
+  return db('projects_resources')
+    .join('resources', 'projects_resources.resource_id', 'resources.id')
+    .select(
+      'id',
+      'name',
+      'description'
+    )
+    .where('projects_resources.project_id', project_id);
+};

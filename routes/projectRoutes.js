@@ -38,7 +38,13 @@ router.get('/:id/tasks', async (req, res) => {
 });
 
 router.get('/:id/resources', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resources = await projectsDb.getResources(id);
+    res.status(200).json(resources);
+  } catch(err) {
 
+  }
 });
 
 
@@ -48,7 +54,8 @@ router.post('/', async (req, res) => {
     const newProject = await projectsDb.insert(req.body);
     res.status(201).json(newProject);
   } catch(err) {
-
+    console.log(err);
+    res.status(500).json(err);
   }
 });
 
@@ -67,7 +74,14 @@ router.post('/:id/tasks', async (req, res) => {
 });
 
 router.post('/:id/resources', async (req, res) => {
-
+  try {
+    const { id } = req.params;
+    const association = await projectsDb.associateResource(id, req.body.id);
+    res.status(201).json(association)
+  } catch(err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
