@@ -8,12 +8,30 @@ module.exports = {
 };
 
 function get() {
-  return db('tasks');
+  return db('tasks')
+    .join('projects', 'tasks.project_id', 'projects.id')
+    .select(
+      'tasks.description as description',
+      'notes',
+      'tasks.completed as completed',
+      'project_id',
+      'projects.name as project_name',
+      'projects.description as project_desc'
+    );
 };
 
 function getById(id) {
   return db('tasks')
-    .where({ id })
+    .join('projects', 'tasks.project_id', 'projects.id')
+    .select(
+      'tasks.description as description',
+      'notes',
+      'tasks.completed as completed',
+      'project_id',
+      'projects.name as project_name',
+      'projects.description as project_desc'
+    )
+    .where('tasks.id', id)
     .first();
 };
 
