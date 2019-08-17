@@ -57,7 +57,8 @@ router.get('/:id/full', async (req, res) => {
 
     Promise.all([projectReq, tasksReq, resourcesReq])
       .then(([project, tasks, resources]) => {
-        project.tasks = tasks;
+        project = convertBool(project);
+        project.tasks = tasks.map(convertBool);
         project.resources = resources;
 
         res.status(200).json(project);
